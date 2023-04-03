@@ -76,7 +76,7 @@ def train_distinguisher(num_epochs,diff = (0x0040,0), num_rounds=7, depth=1):
     #create learnrate schedule
     lr = LearningRateScheduler(cyclic_lr(10,0.002, 0.0001));
     
-    #earlystopping = callbacks.EarlyStopping(monitor ="val_loss",  mode ="min", patience = 5, restore_best_weights = True);
+    earlystopping = callbacks.EarlyStopping(monitor ="val_loss",  mode ="min", patience = 5, restore_best_weights = True);
                                         
     #train and evaluate
     h = net.fit(X,Y,epochs=num_epochs,batch_size=bs,validation_data=(X_eval, Y_eval), callbacks=[lr,check]);
