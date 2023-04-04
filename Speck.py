@@ -51,11 +51,18 @@ def enc_one_round(p, k):
     #c1 = c1 ^ ctemp;
     
     # key add on right to left 
+    #c0, c1 = p[0], p[1];
+    #c0 = ror(c0, ALPHA());
+    #ctemp = c1 ^ k;
+    #c0 = (c0 + ctemp) & MASK_VAL;
+    #c1 = rol(c1, BETA());
+    #c1 = c1 ^ c0;
+
+    # Key add on right branch at the start.
     c0, c1 = p[0], p[1];
+    c1 = c1 ^ k;
     c0 = ror(c0, ALPHA());
-    ctemp = c1 ^ k;
-    c0 = (c0 + ctemp) & MASK_VAL;
-    #c0 = c0 ^ k;
+    c0 = (c0 + c1) & MASK_VAL;
     c1 = rol(c1, BETA());
     c1 = c1 ^ c0;
     
