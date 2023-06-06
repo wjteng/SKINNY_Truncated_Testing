@@ -46,7 +46,7 @@ def enc_one_round(p, k):
     c0 = ror(c0, ALPHA());
     c0 = (c0 + c1) & MASK_VAL;
     c0 = c0 ^ k;
-    ctemp = ror(c0,0); 
+    ctemp = ror(c0,1); 
     c1 = rol(c1, BETA());
     c1 = c1 ^ ctemp;
     
