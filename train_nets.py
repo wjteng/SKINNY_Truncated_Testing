@@ -1,4 +1,4 @@
-import Speck as cipher
+import SKINNY as cipher
 
 
 import numpy as np
