@@ -1,16 +1,14 @@
 import numpy as np
 from os import urandom
 
-def WORD_SIZE():
-    return(16);
+round_constants = array('B', [0x01, 0x03, 0x07, 0x0F, 0x1F, 0x3E, 0x3D, 0x3B, 0x37, 0x2F, 0x1E, 0x3C, 0x39, 0x33,
+                                  0x27, 0x0E, 0x1D, 0x3A, 0x35, 0x2B, 0x16, 0x2C, 0x18, 0x30, 0x21, 0x02, 0x05, 0x0B,
+                                  0x17, 0x2E, 0x1C, 0x38, 0x31, 0x23, 0x06, 0x0D, 0x1B, 0x36, 0x2D, 0x1A, 0x34, 0x29,
+                                  0x12, 0x24, 0x08, 0x11, 0x22, 0x04, 0x09, 0x13, 0x26, 0x0c, 0x19, 0x32, 0x25, 0x0a,
+                                  0x15, 0x2a, 0x14, 0x28, 0x10, 0x20])
 
-def ALPHA():
-    return(7);
-
-def BETA():
-    return(2);
-
-MASK_VAL = 2 ** WORD_SIZE() - 1;
+sbox4 = array('B', [12, 6, 9, 0, 1, 10, 2, 11, 3, 8, 5, 13, 4, 14, 7, 15])
+    sbox4_inv = array('B', [3, 4, 6, 8, 12, 10, 1, 14, 9, 2, 5, 7, 0, 11, 13, 15])
 
 def shuffle_together(l):
     state = np.random.get_state();
@@ -25,63 +23,13 @@ def ror(x,k):
     return((x >> k) | ((x << (WORD_SIZE() - k)) & MASK_VAL));
 
 def enc_one_round(p, k):
-    #Original
-    #c0, c1 = p[0], p[1];
-    #c0 = ror(c0, ALPHA());
-    #c0 = (c0 + c1) & MASK_VAL;
-    #c0 = c0 ^ k;
-    #c1 = rol(c1, BETA());
-    #c1 = c1 ^ c0;
-    
-    #moved key
-    #c0, c1 = p[0], p[1];
-    #c0 = ror(c0, ALPHA());
-    #c0 = c0 ^ k;
-    #c0 = (c0 + c1) & MASK_VAL; 
-    #c1 = rol(c1, BETA());
-    #c1 = c1 ^ c0;
-    
-    # Added shift between left and right
+
     c0, c1 = p[0], p[1];
     c0 = ror(c0, ALPHA());
     c0 = (c0 + c1) & MASK_VAL;
     c0 = c0 ^ k;
-    ctemp = rol(c0,0); 
     c1 = rol(c1, BETA());
-    c1 = c1 ^ ctemp;
-    
-    # key add on right to left 
-    #c0, c1 = p[0], p[1];
-    #c0 = ror(c0, ALPHA());
-    #ctemp = c1 ^ k;
-    #c0 = (c0 + ctemp) & MASK_VAL;
-    #c1 = rol(c1, BETA());
-    #c1 = c1 ^ c0;
-
-    # Key add on right branch at the start.
-    #c0, c1 = p[0], p[1];
-    #c1 = c1 ^ k;
-    #c0 = ror(c0, ALPHA());
-    #c0 = (c0 + c1) & MASK_VAL;
-    #c1 = rol(c1, BETA());
-    #c1 = c1 ^ c0;
-    
-    # Key add on right branch before left shift
-    #c0, c1 = p[0], p[1];
-    #c0 = ror(c0, ALPHA());
-    #c0 = (c0 + c1) & MASK_VAL;
-    #c1 = c1 ^ k;
-    #c1 = rol(c1, BETA());
-    #c1 = c1 ^ c0;
-    
-    # Key add on left to right branch only
-    #c0, c1 = p[0], p[1];
-    #c0 = ror(c0, ALPHA());
-    #c0 = (c0 + c1) & MASK_VAL;
-    #ctemp = c0 ^ k;
-    #c1 = rol(c1, BETA());
-    #c1 = c1 ^ ctemp;
-    
+    c1 = c1 ^ c0;    
     return(c0,c1);
 
 def dec_one_round(c,k):
