@@ -8,7 +8,7 @@ round_constants = array('B', [0x01, 0x03, 0x07, 0x0F, 0x1F, 0x3E, 0x3D, 0x3B, 0x
                                   0x15, 0x2a, 0x14, 0x28, 0x10, 0x20])
 
 sbox4 = array('B', [12, 6, 9, 0, 1, 10, 2, 11, 3, 8, 5, 13, 4, 14, 7, 15])
-    sbox4_inv = array('B', [3, 4, 6, 8, 12, 10, 1, 14, 9, 2, 5, 7, 0, 11, 13, 15])
+sbox4_inv = array('B', [3, 4, 6, 8, 12, 10, 1, 14, 9, 2, 5, 7, 0, 11, 13, 15])
 
 def shuffle_together(l):
     state = np.random.get_state();
