@@ -162,19 +162,22 @@ def encrypt(p, ks):
 
 
 #convert_to_binary takes as input an array of ciphertext pairs
-#where the first row of the array contains the lefthand side of the ciphertexts,
-#the second row contains the righthand side of the ciphertexts,
-#the third row contains the lefthand side of the second ciphertexts,
-#and so on
 #it returns an array of bit vectors containing the same data
 def convert_to_binary(arr):
-  X = np.zeros((2 * WORD_SIZE(),len(arr[0])),dtype=np.uint8);
-  for i in range(2 * WORD_SIZE()):
-    index = i // WORD_SIZE();
-    offset = WORD_SIZE() - (i % WORD_SIZE()) - 1;
-    X[i] = (arr[index] >> offset) & 1;
-  X = X.transpose();
-  return(X);
+  X = np.zeros((2 * WORD_SIZE(),len(arr[0])),dtype=np.uint8)
+
+  arr = arr.transpose([1,0,2])
+  temp = np.zeros_like(arr).reshape(-1,8)
+  temp = np.concatenate((arr[:,0,:],arr[:,1,:]),axis=1)
+  temp = temp.transpose()
+
+  for i,w in enumerate(temp):
+    for j in range(0,16):
+      X[i*16+j,:] = (w>>(15-j)) & 1;
+
+  X = X.transpose()
+
+  return(X)
   
 ## THIS IS FROM SPECK ##
 #takes a text file that contains encrypted block0, block1, true diff prob, real or random
@@ -199,44 +202,44 @@ def convert_to_binary(arr):
 #    return(X,Y,Z);
 
 #baseline training data generator
-def make_train_data(n, nr, diff=(0x0040,0)):
+def make_train_data(n, nr, diff=(0,0,0,0x0001), t=1):
+  keys = np.frombuffer(urandom(8*n*t),dtype=np.uint16).reshape(-1,4*t);
+  ks = expand_keys(keys,nr,t)
+  ks = np.transpose(ks,[1,0,2])
+
   Y = np.frombuffer(urandom(n), dtype=np.uint8); Y = Y & 1;
-  keys = np.frombuffer(urandom(8*n),dtype=np.uint16).reshape(4,-1);
-  plain0l = np.frombuffer(urandom(2*n),dtype=np.uint16);
-  plain0r = np.frombuffer(urandom(2*n),dtype=np.uint16);
-  plain1l = plain0l ^ diff[0]; plain1r = plain0r ^ diff[1];
+  plaint0 = np.frombuffer(urandom(8*n),dtype=np.uint16).reshape(-1,4)
+  plaint1 = plaint0^diff[-1] ;
   num_rand_samples = np.sum(Y==0);
-  plain1l[Y==0] = np.frombuffer(urandom(2*num_rand_samples),dtype=np.uint16);
-  plain1r[Y==0] = np.frombuffer(urandom(2*num_rand_samples),dtype=np.uint16);
-  ks = expand_key(keys, nr);
-  ctdata0l, ctdata0r = encrypt((plain0l, plain0r), ks);
-  ctdata1l, ctdata1r = encrypt((plain1l, plain1r), ks);
-  X = convert_to_binary([ctdata0l, ctdata0r, ctdata1l, ctdata1r]);
+  plaint1 [Y==0] = np.frombuffer(urandom(8*num_rand_samples),dtype=np.uint16).reshape(-1,4)
+  ciphert0 = encrypt(plaint0,ks)
+  ciphert1 = encrypt(plaint1,ks)
+  X = convert_to_binary(np.array([ciphert0,ciphert1]));
   return(X,Y);
 
 #real differences data generator
-def real_differences_data(n, nr, diff=(0x0040,0)):
+def real_differences_data(n, nr, diff=(0,0,0,0x0001), t=1):
   #generate labels
   Y = np.frombuffer(urandom(n), dtype=np.uint8); Y = Y & 1;
   #generate keys
-  keys = np.frombuffer(urandom(8*n),dtype=np.uint16).reshape(4,-1);
+  keys = np.frombuffer(urandom(8*n*t),dtype=np.uint16).reshape(-1,4*t);
   #generate plaintexts
-  plain0l = np.frombuffer(urandom(2*n),dtype=np.uint16);
-  plain0r = np.frombuffer(urandom(2*n),dtype=np.uint16);
+  plaint0 = np.frombuffer(urandom(8*n),dtype=np.uint16).reshape(-1,4)
   #apply input difference
-  plain1l = plain0l ^ diff[0]; plain1r = plain0r ^ diff[1];
+  plaint1 = plaint0^diff[-1] ;
   num_rand_samples = np.sum(Y==0);
   #expand keys and encrypt
-  ks = expand_key(keys, nr);
-  ctdata0l, ctdata0r = encrypt((plain0l, plain0r), ks);
-  ctdata1l, ctdata1r = encrypt((plain1l, plain1r), ks);
+  ks = expand_keys(keys,nr,t)
+  ks = np.transpose(ks,[1,0,2])
+  
+  ciphert0 = encrypt(plaint0,ks)
+  ciphert1 = encrypt(plaint1,ks)
+  
   #generate blinding values
-  k0 = np.frombuffer(urandom(2*num_rand_samples),dtype=np.uint16);
-  k1 = np.frombuffer(urandom(2*num_rand_samples),dtype=np.uint16);
+  blinding = np.frombuffer(urandom(8*num_rand_samples),dtype=np.uint16).reshape(-1,4)
   #apply blinding to the samples labelled as random
-  ctdata0l[Y==0] = ctdata0l[Y==0] ^ k0; ctdata0r[Y==0] = ctdata0r[Y==0] ^ k1;
-  ctdata1l[Y==0] = ctdata1l[Y==0] ^ k0; ctdata1r[Y==0] = ctdata1r[Y==0] ^ k1;
+  ciphert0[Y==0] = ciphert0[Y==0] ^ blinding
   #convert to input data for neural networks
-  X = convert_to_binary([ctdata0l, ctdata0r, ctdata1l, ctdata1r]);
+  X = convert_to_binary(np.array([ciphert0,ciphert1]));
   return(X,Y);
 
