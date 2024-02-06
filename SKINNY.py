@@ -93,7 +93,7 @@ def expand_keys(keys,nr,t) :
 
 def enc_one_round(c,k,rc):
     temp = c
-    iin_state = np.zeros((c.shape[0],16),dtype=np.uint16)
+    in_state = np.zeros((c.shape[0],16),dtype=np.uint16)
     
     # splitting c(4 X 16-bits) into in_state(16 X 4-bits)
     for i in range(0,4):
