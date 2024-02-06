@@ -66,7 +66,7 @@ def LFSR3(tk):
     return tk
 
 def expand_keys(keys,nr,t) :
-    ks = np.zeros((n,nr,2),dtype=np.uint16)
+    ks = np.zeros((keys.shape[0],nr,2),dtype=np.uint16)
     tk1 = tk2 = tk3 = keys [:,0:4]
     if t > 1:
       tk2 = keys [:,4:8]
@@ -93,7 +93,7 @@ def expand_keys(keys,nr,t) :
 
 def enc_one_round(c,k,rc):
     temp = c
-    in_state = np.zeros((n,16),dtype=np.uint16)
+    iin_state = np.zeros((c.shape[0],16),dtype=np.uint16)
     
     # splitting c(4 X 16-bits) into in_state(16 X 4-bits)
     for i in range(0,4):
