@@ -67,8 +67,8 @@ def train_distinguisher(num_epochs,diff = (0,0,0,0x0001), num_rounds=7, depth=1)
     #X_eval, Y_eval = cipher.make_train_data(10**6, num_rounds,diff);
     
     #generate training and validation data
-    X, Y = cipher.real_differences_data(10**7,num_rounds,diff,1);
-    X_eval, Y_eval = cipher.real_differences_data(10**6, num_rounds,diff,1);
+    X, Y = cipher.real_differences_data(10**5,num_rounds,diff,1);
+    X_eval, Y_eval = cipher.real_differences_data(10**4, num_rounds,diff,1);
     
     
     #set up model checkpoint
