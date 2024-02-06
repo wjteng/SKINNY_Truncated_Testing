@@ -25,7 +25,7 @@ def make_checkpoint(datei):
   return(res);
 
 #make residual tower of convolutional blocks
-def make_resnet(num_blocks=2, num_filters=32, num_outputs=1, d1=64, d2=64, word_size=16, ks=3,depth=5, reg_param=0.0001, final_activation='sigmoid'):
+def make_resnet(num_blocks=1, num_filters=32, num_outputs=1, d1=64, d2=64, word_size=64, ks=3,depth=5, reg_param=0.0001, final_activation='sigmoid'):
   #Input and preprocessing layers
   inp = Input(shape=(num_blocks * word_size * 2,));
   rs = Reshape((2 * num_blocks, word_size))(inp);
@@ -57,7 +57,7 @@ def make_resnet(num_blocks=2, num_filters=32, num_outputs=1, d1=64, d2=64, word_
   model = Model(inputs=inp, outputs=out);
   return(model);
 
-def train_distinguisher(num_epochs,diff = (0x0040,0), num_rounds=7, depth=1):
+def train_distinguisher(num_epochs,diff = (0,0,0,0x0001), num_rounds=7, depth=1):
     #create the network
     net = make_resnet(depth=depth, reg_param=10**-5);
     net.compile(optimizer='adam',loss='mse',metrics=['acc']);
@@ -67,8 +67,8 @@ def train_distinguisher(num_epochs,diff = (0x0040,0), num_rounds=7, depth=1):
     #X_eval, Y_eval = cipher.make_train_data(10**6, num_rounds,diff);
     
     #generate training and validation data
-    X, Y = cipher.real_differences_data(10**7,num_rounds,diff);
-    X_eval, Y_eval = cipher.real_differences_data(10**6, num_rounds,diff);
+    X, Y = cipher.real_differences_data(10**7,num_rounds,diff,1);
+    X_eval, Y_eval = cipher.real_differences_data(10**6, num_rounds,diff,1);
     
     
     #set up model checkpoint
