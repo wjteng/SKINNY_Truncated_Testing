@@ -57,7 +57,7 @@ def make_resnet(num_blocks=1, num_filters=32, num_outputs=1, d1=64, d2=64, word_
   model = Model(inputs=inp, outputs=out);
   return(model);
 
-def train_distinguisher(num_epochs,diff = (0,0,0,0x0001), num_rounds=7, depth=1):
+def train_distinguisher(num_epochs,diff = (0,0,0,0x0001), num_rounds=7, depth=1,in_trunc,out_trunc):
     #create the network
     net = make_resnet(depth=depth, reg_param=10**-5);
     net.compile(optimizer='adam',loss='mse',metrics=['acc']);
@@ -68,7 +68,20 @@ def train_distinguisher(num_epochs,diff = (0,0,0,0x0001), num_rounds=7, depth=1)
     
     #generate training and validation data
     X, Y = cipher.real_differences_data(10**6,num_rounds,diff,1);
+    for index, value in enumerate(reversed(out_trunc)) :
+      if value == 0:
+        X = np.delete(X,slice((15-index)*4+64,(15-index)*4+4+64),1)
+    for index, value in enumerate(reversed(in_trunc)) :
+      if value == 0:
+        X = np.delete(X,slice((15-index)*4,(15-index)*4+4),1)
+        
     X_eval, Y_eval = cipher.real_differences_data(10**5, num_rounds,diff,1);
+    for index, value in enumerate(reversed(out_trunc)) :
+      if value == 0:
+        X_eval = np.delete(X_eval,slice((15-index)*4+64,(15-index)*4+4+64),1)
+    for index, value in enumerate(reversed(in_trunc)) :
+      if value == 0:
+        X_eval = np.delete(X_eval,slice((15-index)*4,(15-index)*4+4),1)
     
     
     #set up model checkpoint
