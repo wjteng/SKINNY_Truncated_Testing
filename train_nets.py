@@ -57,7 +57,7 @@ def make_resnet(num_blocks=1, num_filters=32, num_outputs=1, d1=64, d2=64, word_
   model = Model(inputs=inp, outputs=out);
   return(model);
 
-def train_distinguisher(num_epochs,diff = (0,0,0,0x0001), num_rounds=7, depth=1,in_trunc,out_trunc):
+def train_distinguisher(num_epochs,diff = (0,0,0,0x0001), num_rounds=7, depth=1,in_trunc=(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),out_trunc=(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)):
     #create the network
     net = make_resnet(depth=depth, reg_param=10**-5);
     net.compile(optimizer='adam',loss='mse',metrics=['acc']);
