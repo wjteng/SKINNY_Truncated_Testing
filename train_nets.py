@@ -70,7 +70,7 @@ def train_distinguisher(num_epochs,diff = (0,0,0,0x0001), num_rounds=7, depth=1,
     for i in out_trunc:
       if i == 1:
         active_count += 1
-    
+    print(active_count)
     #create the network
     net = make_resnet(depth=depth, reg_param=10**-5,active_count=active_count);
     net.compile(optimizer='adam',loss='mse',metrics=['acc']);
