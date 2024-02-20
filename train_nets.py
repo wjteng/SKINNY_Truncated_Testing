@@ -26,7 +26,7 @@ def make_checkpoint(datei):
 
 #make residual tower of convolutional blocks
 def make_resnet(num_blocks=1, num_filters=32, num_outputs=1, d1=64, d2=64, word_size=64, ks=3,depth=5, reg_param=0.0001, final_activation='sigmoid',active_count=32):
-  
+  print(active_count)
   #Input and preprocessing layers
   inp = Input(shape=(num_blocks * word_size * 2,));
   #rs = Reshape((2 * num_blocks, word_size))(inp);
