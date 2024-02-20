@@ -1,1 +1,1 @@
-# Speck_Testings
+# Speck_Truncated_Testings
