@@ -29,6 +29,7 @@ def make_resnet(num_blocks=1, num_filters=32, num_outputs=1, d1=64, d2=64, word_
   print(active_count)
   #Input and preprocessing layers
   inp = Input(shape=(num_blocks * word_size * 2,));
+  inp = Input(shape=(active_count*4,))
   #rs = Reshape((2 * num_blocks, word_size))(inp);
   #rs = Reshape((active_count,4))(inp);
   rs = Reshape((1,active_count*4))(inp)
