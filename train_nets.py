@@ -77,8 +77,8 @@ def train_distinguisher(num_epochs,diff = (0,0,0,0x0001), num_rounds=7, depth=1,
     #X, Y = cipher.make_train_data(10**7,num_rounds,diff);
     #X_eval, Y_eval = cipher.make_train_data(10**6, num_rounds,diff);
     
-    #generate training and validation data 6-5
-    X, Y = cipher.real_differences_data(10**3,num_rounds,diff,1);
+    #generate training and validation data 
+    X, Y = cipher.real_differences_data(10**6,num_rounds,diff,1);
     print(X[:20,:])
     for index, value in enumerate(reversed(trunc)) :
       # removing the active nibbles, leaving only inactive nibbles
@@ -90,7 +90,7 @@ def train_distinguisher(num_epochs,diff = (0,0,0,0x0001), num_rounds=7, depth=1,
         X = np.delete(X,slice((15-index)*4,(15-index)*4+4),1)
 
         
-    X_eval, Y_eval = cipher.real_differences_data(10**2, num_rounds,diff,1);
+    X_eval, Y_eval = cipher.real_differences_data(10**5, num_rounds,diff,1);
     for index, value in enumerate(reversed(trunc)) :
       # removing the active nibbles, leaving only inactive nibbles
       if value == 1:
