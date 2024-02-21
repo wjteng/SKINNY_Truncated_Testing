@@ -79,20 +79,25 @@ def train_distinguisher(num_epochs,diff = (0,0,0,0x0001), num_rounds=7, depth=1,
     
     #generate training and validation data
     X, Y = cipher.real_differences_data(10**6,num_rounds,diff,1);
-    for index, value in enumerate(reversed(out_trunc)) :
-      if value == 0:
+    for index, value in enumerate(reversed(trunc)) :
+      # removing the active nibbles, leaving only inactive nibbles
+      if value == 1:
         X = np.delete(X,slice((15-index)*4+64,(15-index)*4+4+64),1)
-    for index, value in enumerate(reversed(in_trunc)) :
-      if value == 0:
+    for index, value in enumerate(reversed(trunc)) :
+      # removing the active nibbles, leaving only inactive nibbles
+      if value == 1:
         X = np.delete(X,slice((15-index)*4,(15-index)*4+4),1)
+
         
     X_eval, Y_eval = cipher.real_differences_data(10**5, num_rounds,diff,1);
-    for index, value in enumerate(reversed(out_trunc)) :
-      if value == 0:
+    for index, value in enumerate(reversed(trunc)) :
+      # removing the active nibbles, leaving only inactive nibbles
+      if value == 1:
         X_eval = np.delete(X_eval,slice((15-index)*4+64,(15-index)*4+4+64),1)
-    for index, value in enumerate(reversed(in_trunc)) :
-      if value == 0:
-        X_eval = np.delete(X_eval,slice((15-index)*4,(15-index)*4+4),1)
+    for index, value in enumerate(reversed(trunc)) :
+      # removing the active nibbles, leaving only inactive nibbles
+      if value == 1:
+        X_eval = np.delete(X_eval,slice((15-index)*4,(15-index)*4+4),1)))
     
     
     #set up model checkpoint
