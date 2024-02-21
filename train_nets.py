@@ -101,6 +101,8 @@ def train_distinguisher(num_epochs,diff = (0,0,0,0x0001), num_rounds=7, depth=1,
     
     print(X)
     print(Y)
+    savetxt('Y.csv', Y, delimiter=',')
+    savetxt('X.csv', X, delimiter=',')
     #set up model checkpoint
     check = make_checkpoint(wdir+'best'+str(num_rounds)+'depth'+str(depth)+'.h5');
     #create learnrate schedule
