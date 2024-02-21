@@ -79,7 +79,6 @@ def train_distinguisher(num_epochs,diff = (0,0,0,0x0001), num_rounds=7, depth=1,
     
     #generate training and validation data 
     X, Y = cipher.real_differences_data(10**6,num_rounds,diff,1);
-    print(X[:20,:])
     for index, value in enumerate(reversed(trunc)) :
       # removing the active nibbles, leaving only inactive nibbles
       if value == 1:
@@ -99,9 +98,6 @@ def train_distinguisher(num_epochs,diff = (0,0,0,0x0001), num_rounds=7, depth=1,
       # removing the active nibbles, leaving only inactive nibbles
       if value == 1:
         X_eval = np.delete(X_eval,slice((15-index)*4,(15-index)*4+4),1)
-    np.set_printoptions(threshold=1000000)
-    print(X[:20,:])
-    print(Y[:20])
   
     #set up model checkpoint
     check = make_checkpoint(wdir+'best'+str(num_rounds)+'depth'+str(depth)+'.h5');
