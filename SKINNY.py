@@ -209,7 +209,7 @@ def make_train_data(n, nr, diff=(0,0,0,0x0001), t=1):
 
   Y = np.frombuffer(urandom(n), dtype=np.uint8); Y = Y & 1;
   plaint0 = np.frombuffer(urandom(8*n),dtype=np.uint16).reshape(-1,4)
-  plaint1 = plaint0^diff[-1] ;
+  plaint1 = plaint0^diff ;
   num_rand_samples = np.sum(Y==0);
   plaint1 [Y==0] = np.frombuffer(urandom(8*num_rand_samples),dtype=np.uint16).reshape(-1,4)
   ciphert0 = encrypt(plaint0,ks)
