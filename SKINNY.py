@@ -226,7 +226,7 @@ def real_differences_data(n, nr, diff=(0,0,0,0x0001), t=1):
   #generate plaintexts
   plaint0 = np.frombuffer(urandom(8*n),dtype=np.uint16).reshape(-1,4)
   #apply input difference
-  plaint1 = plaint0^diff[-1] ;
+  plaint1 = plaint0^diff ;
   num_rand_samples = np.sum(Y==0);
   #expand keys and encrypt
   ks = expand_keys(keys,nr,t)
