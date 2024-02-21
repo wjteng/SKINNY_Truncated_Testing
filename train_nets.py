@@ -99,7 +99,8 @@ def train_distinguisher(num_epochs,diff = (0,0,0,0x0001), num_rounds=7, depth=1,
       if value == 1:
         X_eval = np.delete(X_eval,slice((15-index)*4,(15-index)*4+4),1)
     
-    
+    print(X)
+    print(X_eval)
     #set up model checkpoint
     check = make_checkpoint(wdir+'best'+str(num_rounds)+'depth'+str(depth)+'.h5');
     #create learnrate schedule
