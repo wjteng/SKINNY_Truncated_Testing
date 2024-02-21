@@ -29,11 +29,11 @@ def make_resnet(num_blocks=1, num_filters=32, num_outputs=1, d1=64, d2=64, word_
   print("inactive_count:",inactive_count)
   #Input and preprocessing layers
   #inp = Input(shape=(num_blocks * word_size * 2,));
-  inp = Input(shape=(active_count*4*2,))
+  inp = Input(shape=(inactive_count*4*2,))
   #rs = Reshape((2 * num_blocks, word_size))(inp);
   #rs = Reshape((active_count,4))(inp);
-  rs = Reshape((2,active_count*4))(inp)
-  num_filters = active_count*2*4
+  rs = Reshape((2,inactive_count*4))(inp)
+  num_filters = inactive_count*2*4
   perm = Permute((2,1))(rs);
   #add a single residual layer that will expand the data to num_filters channels
   #this is a bit-sliced layer
