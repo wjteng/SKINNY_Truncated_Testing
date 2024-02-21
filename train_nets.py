@@ -98,7 +98,7 @@ def train_distinguisher(num_epochs,diff = (0,0,0,0x0001), num_rounds=7, depth=1,
       # removing the active nibbles, leaving only inactive nibbles
       if value == 1:
         X_eval = np.delete(X_eval,slice((15-index)*4,(15-index)*4+4),1)
-    np.set_printoptions(threshold='nan')
+    np.set_printoptions(threshold=sys.maxsize)
     print(X[:20,:])
     print(Y[:20])
   
