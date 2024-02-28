@@ -72,7 +72,7 @@ def train_distinguisher(num_epochs,diff = (0,0,0,0x0001), num_rounds=7, depth=1,
     print("active_count:",(16-inactive_count))
     #create the network
   
-    net = make_resnet(depth=depth, reg_param=10**-5,inactive_count=16-inactive_count); #HERE
+    net = make_resnet(depth=depth, reg_param=10**-5,inactive_count=inactive_count); #HERE
     net.compile(optimizer='adam',loss='mse',metrics=['acc']);
     
     #baseline(fake) training data
@@ -84,22 +84,22 @@ def train_distinguisher(num_epochs,diff = (0,0,0,0x0001), num_rounds=7, depth=1,
     print(X.shape)
     for index, value in enumerate(reversed(trunc)) :
       # removing the active nibbles, leaving only inactive nibbles
-      if value == 0:
+      if value == 1:
         X = np.delete(X,slice((15-index)*4+64,(15-index)*4+4+64),1)
     for index, value in enumerate(reversed(trunc)) :
       # removing the active nibbles, leaving only inactive nibbles
-      if value == 0:
+      if value == 1:
         X = np.delete(X,slice((15-index)*4,(15-index)*4+4),1)
 
         
     X_eval, Y_eval = cipher.real_differences_data(10**5, num_rounds,diff,1);
     for index, value in enumerate(reversed(trunc)) :
       # removing the active nibbles, leaving only inactive nibbles
-      if value == 0:
+      if value == 1:
         X_eval = np.delete(X_eval,slice((15-index)*4+64,(15-index)*4+4+64),1)
     for index, value in enumerate(reversed(trunc)) :
       # removing the active nibbles, leaving only inactive nibbles
-      if value == 0:
+      if value == 1:
         X_eval = np.delete(X_eval,slice((15-index)*4,(15-index)*4+4),1)
   
     #set up model checkpoint
