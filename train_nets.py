@@ -72,7 +72,7 @@ def train_distinguisher(num_epochs,diff = (0,0,0,0x0001), num_rounds=7, depth=1,
     print("active_count:",(16-inactive_count))
     #create the network
   
-    net = make_resnet(depth=depth, reg_param=10**-5,inactive_count=active_count); #HERE
+    net = make_resnet(depth=depth, reg_param=10**-5,inactive_count=16-inactive_count); #HERE
     net.compile(optimizer='adam',loss='mse',metrics=['acc']);
     
     #baseline(fake) training data
