@@ -239,6 +239,7 @@ def real_differences_data(n, nr, diff=(0,0,0,0x0001), t=1):
   blinding = np.frombuffer(urandom(8*num_rand_samples),dtype=np.uint16).reshape(-1,4)
   #apply blinding to the samples labelled as random
   ciphert0[Y==0] = ciphert0[Y==0] ^ blinding
+  ciphert1[Y==0] = ciphert1[Y==0] ^ blinding
   #convert to input data for neural networks
   X = convert_to_binary(np.array([ciphert0,ciphert1]));
   return(X,Y);
