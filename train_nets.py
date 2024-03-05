@@ -52,6 +52,7 @@ def make_resnet(num_blocks=1, num_filters=32, num_outputs=1, d1=64, d2=64, word_
     conv2 = BatchNormalization()(conv2);
     conv2 = Activation('relu')(conv2);
     shortcut = Add()([shortcut, conv2]);
+    print(shortcut.shape) 
   #add prediction head
   flat1 = Flatten()(shortcut);
   dense1 = Dense(d1,kernel_regularizer=l2(reg_param))(flat1);
